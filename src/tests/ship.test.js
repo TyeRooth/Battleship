@@ -1,4 +1,4 @@
-import { Ship } from "./index";
+import { Ship } from "../index.js";
 
 let patrolBoat;
 

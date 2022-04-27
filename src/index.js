@@ -19,6 +19,29 @@ const Ship = (name, positions) => {
     }
 }
 
+const GameBoard = () => {
 
+    let ships = [];
 
-export {Ship};
+    function placeShip (position, axis, length, name ) {
+        let shipSpots = [];
+        if (axis === "x") {
+            for(let i = 0; i < length; i++) {
+                shipSpots.push(position + i);
+            }
+        }
+        else if (axis === "y") {
+            for(let i = 0; i < length; i++) {
+                shipSpots.push(position + 10 * i);
+            }
+        }
+        ships.push(Ship (name, shipSpots));
+    }
+
+    return {
+        placeShip,
+        ships
+    }
+}
+
+export {Ship, GameBoard};
