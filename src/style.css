@@ -1,3 +1,42 @@
 body {
-    color: red;
+    padding: 0px;
+    margin: 0px;
+}
+
+#page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#heading-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: antiquewhite;
+    height: 10vh;
+}
+
+#message-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: aliceblue;
+    height: 10vh;
+}
+
+#boards-section {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: aqua;
+    height: 72vh;
+}
+
+#credit-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 8vh;
+    background-color: wheat;
 }

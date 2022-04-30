@@ -30,3 +30,4 @@ it('computer hits only positions on the board', () => {
         return position >= 0 || position < 100;
     })).toBe(true);
 });
+
