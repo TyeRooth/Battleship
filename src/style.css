@@ -13,15 +13,19 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: antiquewhite;
+    background-color: midnightblue;
     height: 10vh;
+}
+
+#logo {
+    height: 7vh;
 }
 
 #message-section {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: aliceblue;
+    background-color: midnightblue;
     height: 10vh;
 }
 
@@ -29,8 +33,10 @@ body {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-color: aqua;
+    background-color: midnightblue;
     height: 72vh;
+    flex-wrap: wrap;
+    gap: 40px;
 }
 
 #credit-section {
@@ -38,5 +44,23 @@ body {
     justify-content: center;
     align-items: center;
     height: 8vh;
-    background-color: wheat;
+    background-color: lightgray;
+}
+
+.board {
+    width: 400px;
+    height: 400px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 2px;
+}
+
+.position {
+    color: white;
+    background-color: midnightblue;
+    border: 1px solid white;
+}
+
+.position:hover {
+    background-color: lightgray;
 }

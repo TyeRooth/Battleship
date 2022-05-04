@@ -1,4 +1,5 @@
 import { Ship } from "./ship";
+import { createBoard } from "./DOM";
 
 const GameBoard = () => {
 
@@ -39,12 +40,17 @@ const GameBoard = () => {
         return ships.every((element) => { return element.isSunk();} );
     } 
 
+    function updateBoardDOM () {
+        createBoard();
+    }
+
     return {
         placeShip,
         receiveAttack,
         ships,
         missedShots,
-        checkShips
+        checkShips,
+        updateBoardDOM
     }
 }
 
