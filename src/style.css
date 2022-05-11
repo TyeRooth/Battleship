@@ -61,6 +61,12 @@ body {
     border: 1px solid white;
 }
 
-.position:hover {
-    background-color: lightgray;
+.enemy button:hover {
+    background-color: green;
+    cursor: crosshair;
+}
+
+.enemy button.shot:hover {
+    background-color: maroon;
+    cursor:not-allowed;
 }

@@ -40,8 +40,8 @@ const GameBoard = () => {
         return ships.every((element) => { return element.isSunk();} );
     } 
 
-    function updateBoardDOM () {
-        createBoard();
+    function updateBoardDOM (type) {
+        createBoard(type);
     }
 
     return {
