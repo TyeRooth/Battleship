@@ -4,6 +4,7 @@ let computer;
 let opponent;
 let boardOne;
 let boardTwo;
+const totalBoardPositions = 100;
 
 beforeEach(() => {
     computer = Player("computer");
@@ -27,7 +28,7 @@ it('computer hits only positions on the board', () => {
         computer.attackEnemy();
     };
     expect(computer.attackedPositions.every((position) => {
-        return position >= 0 || position < 100;
+        return position >= 0 || position < totalBoardPositions;
     })).toBe(true);
 });
 

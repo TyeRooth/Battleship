@@ -42,10 +42,10 @@ it('check whether checkShips returns true', () => {
     board.placeShip(13, "y", 1, "test2");
     board.receiveAttack(11);
     board.receiveAttack(13);
-    expect(board.checkShips()).toBe(true)
+    expect(board.checkLoseCondition()).toBe(true)
 });
 
 it('check whether checkShips returns false when ships are alive', () => {
     board.placeShip(11, "x", 2, "test");
-    expect(board.checkShips()).toBe(false);
+    expect(board.checkLoseCondition()).toBe(false);
 })

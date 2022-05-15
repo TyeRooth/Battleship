@@ -5,8 +5,8 @@ const GameBoard = () => {
 
     //Order of positions array lines up with order of ships array.
     let ships = [];
-    let positions = [];
     let missedShots = [];
+    const rowSize = 10;
 
     function placeShip (position, axis, length, name ) {
         let shipSpots = [];
@@ -17,17 +17,16 @@ const GameBoard = () => {
         }
         else if (axis === "y") {
             for(let i = 0; i < length; i++) {
-                shipSpots.push(position + 10 * i);
+                shipSpots.push(position + rowSize * i);
             }
         }
         ships.push(Ship (name, shipSpots));
-        positions.push(shipSpots);
     }
 
     function receiveAttack (position) {
         for(let i = 0; i < ships.length; i++) {
-            for(let j = 0; j < positions[i].length; j++) {
-                if (positions[i][j] === position) {
+            for(let j = 0; j < ships[i].positions.length; j++) {
+                if (ships[i].positions[j] === position) {
                     ships[i].hit(position);
                     return;
                 }
@@ -36,7 +35,7 @@ const GameBoard = () => {
         missedShots.push(position);
     }
 
-    function checkShips () {
+    function checkLoseCondition () {
         return ships.every((element) => { return element.isSunk();} );
     } 
 
@@ -49,7 +48,7 @@ const GameBoard = () => {
         receiveAttack,
         ships,
         missedShots,
-        checkShips,
+        checkLoseCondition,
         updateBoardDOM
     }
 }

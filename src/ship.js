@@ -3,18 +3,18 @@ const Ship = (name, positions) => {
 
     let hits = [];
     function hit (position) {
-        hits.push(position);
+        if (!hits.includes(position)) {
+            hits.push(position);
+        }
     }
     function isSunk () {
-        if (hits.length === positions.length) {
-            return true;
-        }
-        else { return false };
+        return hits.length === positions.length;
     }
 
     return {
         hit,
         isSunk,
+        positions
     }
 }
 

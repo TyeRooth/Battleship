@@ -8,3 +8,11 @@ const cBoard = computer.playerBoard;
 
 pBoard.updateBoardDOM("player");
 cBoard.updateBoardDOM("enemy");
+
+player.attackEnemy();
+
+let turn = 0;
+do {
+    turn++;
+}
+while (turn < 20);
