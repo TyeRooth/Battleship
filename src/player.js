@@ -5,6 +5,7 @@ const Player = (type) => {
     let attackedPositions = [];
     let openPositions = Array.from(Array(100).keys());
     let playerBoard = GameBoard()
+    let axis = "x";
 
     async function attackEnemy () {
         if (type === "computer") {
@@ -22,8 +23,28 @@ const Player = (type) => {
         }
     }
 
+    function setupBoard () {
+        setupShip(5, "Carrier");
+        setupShip(4, "Battleship");
+        setupShip(3, "Destroyer");
+        setupShip(3, "Submarine");
+        setupShip(2, "Patrol Boat");
+    }
+
+    async function setupShip (length, name) {
+        if (type === "computer") {
+            axis = (Math.random() < 0.5 ? "x" : "y");
+            let openPositions = playerBoard.shipCanBePlaced(axis, length);
+            console.log(openPositions);
+            const randomPosition = openPositions[Math.floor(Math.random() * openPositions.length)];
+            console.log(randomPosition);
+            playerBoard.placeShip(randomPosition, axis, length, name);
+        }
+    }
+
     return {
         attackEnemy,
+        setupBoard,
         playerBoard,
         attackedPositions
     }

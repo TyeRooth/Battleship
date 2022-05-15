@@ -3,6 +3,10 @@ body {
     margin: 0px;
 }
 
+:root {
+    font-size: 20px;
+}
+
 #page {
     display: flex;
     flex-direction: column;
@@ -37,6 +41,17 @@ body {
     height: 72vh;
     flex-wrap: wrap;
     gap: 40px;
+}
+
+.board-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.board-heading {
+    color: white;
 }
 
 #credit-section {

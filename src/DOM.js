@@ -1,7 +1,13 @@
 import { GameBoard } from "./gameBoard";
 
 function renderBoard (type, missedShots, hitShots) {
+
     const boardSection = document.getElementById('boards-section');
+    const boardNode = document.createElement('div');
+    boardNode.classList.add('board-summary');
+    const boardHeading = createHeading(type);
+    boardNode.appendChild(boardHeading);
+
     const board = document.createElement('div');
     board.classList.add('board');
     board.classList.add(`${ type }`)
@@ -23,7 +29,8 @@ function renderBoard (type, missedShots, hitShots) {
         board.appendChild(position);
     };
     if (!document.querySelector(`.${ type }`)) {
-        boardSection.appendChild(board);
+        boardNode.appendChild(board);
+        boardSection.appendChild(boardNode);
     }
     else {
         const currentBoard = document.querySelector(`.${ type }`);
@@ -31,6 +38,21 @@ function renderBoard (type, missedShots, hitShots) {
         currentBoard.appendChild(board);
     }  
 };
+
+function createHeading(type) {
+    const headingNode = document.createElement('div');
+    headingNode.classList.add('board-heading');
+    if (type === "player") {
+        headingNode.textContent = "Friendly Waters";
+    }
+    else if (type === "enemy") {
+        headingNode.textContent = "Enemy Waters";
+    }
+    else if (type === "placement") {
+        headingNode.textContent = "Ready you Ships";
+    }
+    return headingNode
+}
 
 function missedShotDOM () {
     const missCircle = document.createElement('div');
