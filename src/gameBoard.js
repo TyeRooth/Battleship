@@ -1,11 +1,12 @@
 import { Ship } from "./ship";
-import { createBoard } from "./DOM";
+import { renderBoard } from "./DOM";
 
 const GameBoard = () => {
 
     //Order of positions array lines up with order of ships array.
     let ships = [];
     let missedShots = [];
+    let hitShots = [];
     const rowSize = 10;
 
     function placeShip (position, axis, length, name ) {
@@ -28,6 +29,7 @@ const GameBoard = () => {
             for(let j = 0; j < ships[i].positions.length; j++) {
                 if (ships[i].positions[j] === position) {
                     ships[i].hit(position);
+                    hitShots.push(position);
                     return;
                 }
             }
@@ -40,7 +42,7 @@ const GameBoard = () => {
     } 
 
     function updateBoardDOM (type) {
-        createBoard(type);
+        renderBoard(type, missedShots, hitShots);
     }
 
     return {

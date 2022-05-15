@@ -1,6 +1,6 @@
 import { GameBoard } from "./gameBoard";
 
-function createBoard (type) {
+function renderBoard (type, missedShots, hitShots) {
     const boardSection = document.getElementById('boards-section');
     const board = document.createElement('div');
     board.classList.add('board');
@@ -9,10 +9,28 @@ function createBoard (type) {
         const position = document.createElement(`button`);
         position.classList.add('position');
         position.setAttribute('data-position', i);
-        position.textContent = i;
+        if (missedShots.includes(i)) {
+            position.classList.add('shot');
+            position.textContent = "miss"
+        }
+        else if (hitShots.includes(i)) {
+            position.classList.add('shot');
+            position.textContent = "hit";
+        }
+        else {
+            position.textContent = i;
+        }
         board.appendChild(position);
     };
-    boardSection.appendChild(board);
+    if (!document.querySelector(`.${ type }`)) {
+        boardSection.appendChild(board);
+    }
+    else {
+        const currentBoard = document.querySelector(`.${ type }`);
+        currentBoard.textContent = "";
+        currentBoard.appendChild(board);
+    }
+    
 };
 
-export { createBoard };
+export { renderBoard };

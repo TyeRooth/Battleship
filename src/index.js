@@ -9,10 +9,22 @@ const cBoard = computer.playerBoard;
 pBoard.updateBoardDOM("player");
 cBoard.updateBoardDOM("enemy");
 
-player.attackEnemy();
-
-let turn = 0;
-do {
-    turn++;
+async function gameFlow () {
+    let turn = 0;
+    do {
+        if (turn % 2 === 0) {
+            cBoard.receiveAttack(await player.attackEnemy());
+            console.log(cBoard.missedShots);
+        }
+        else {
+            pBoard.receiveAttack(await computer.attackEnemy());
+            console.log(pBoard.missedShots);
+        }
+        pBoard.updateBoardDOM("player");
+        cBoard.updateBoardDOM("enemy");
+        turn++
+    }
+    while (turn < 20);
 }
-while (turn < 20);
+
+gameFlow();

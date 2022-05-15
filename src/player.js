@@ -6,7 +6,7 @@ const Player = (type) => {
     let openPositions = Array.from(Array(100).keys());
     let playerBoard = GameBoard()
 
-    function attackEnemy () {
+    async function attackEnemy () {
         if (type === "computer") {
             let index = Math.floor(Math.random() * openPositions.length);
             let position = openPositions[index];
@@ -15,7 +15,10 @@ const Player = (type) => {
             return position;
         }
         else if (type === "player") {
-            let position = addHitButtons(attackedPositions);    
+            let position = Number(await addHitButtons(attackedPositions));
+            attackedPositions.push(position);
+            openPositions.splice(position - attackedPositions.length, 1);
+            return position;    
         }
     }
 
