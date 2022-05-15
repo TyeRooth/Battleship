@@ -11,11 +11,11 @@ function renderBoard (type, missedShots, hitShots) {
         position.setAttribute('data-position', i);
         if (missedShots.includes(i)) {
             position.classList.add('shot');
-            position.textContent = "miss"
+            position.appendChild(missedShotDOM());
         }
         else if (hitShots.includes(i)) {
             position.classList.add('shot');
-            position.textContent = "hit";
+            position.appendChild(hitShotDOM());
         }
         else {
             position.textContent = i;
@@ -29,8 +29,21 @@ function renderBoard (type, missedShots, hitShots) {
         const currentBoard = document.querySelector(`.${ type }`);
         currentBoard.textContent = "";
         currentBoard.appendChild(board);
-    }
-    
+    }  
 };
+
+function missedShotDOM () {
+    const missCircle = document.createElement('div');
+    missCircle.classList.add('circle');
+    missCircle.style.backgroundColor = "white";
+    return missCircle;
+}
+
+function hitShotDOM (position) {
+    const hitCircle = document.createElement('div');
+    hitCircle.classList.add('circle');
+    hitCircle.style.backgroundColor = "red";
+    return hitCircle;
+}
 
 export { renderBoard };
