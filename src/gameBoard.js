@@ -22,6 +22,7 @@ const GameBoard = () => {
             }
         }
         ships.push(Ship (name, shipSpots));
+        return shipSpots;
     }
 
     function receiveAttack (position) {
@@ -80,7 +81,7 @@ const GameBoard = () => {
     }
 
     function updateBoardDOM (type) {
-        renderBoard(type, missedShots, hitShots);
+        renderBoard(type, missedShots, hitShots, ships);
     }
 
     return {

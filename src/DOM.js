@@ -1,6 +1,7 @@
 import { GameBoard } from "./gameBoard";
+import { Ship } from "./ship";
 
-function renderBoard (type, missedShots, hitShots) {
+function renderBoard (type, missedShots, hitShots, shipSpots) {
 
     const boardSection = document.getElementById('boards-section');
     const boardNode = document.createElement('div');
@@ -26,6 +27,9 @@ function renderBoard (type, missedShots, hitShots) {
         else {
             position.textContent = i;
         }
+        if (type === "player"  && showShips(shipSpots, i)) {
+           position.classList.add('ship');
+        }
         board.appendChild(position);
     };
     if (!document.querySelector(`.${ type }`)) {
@@ -36,8 +40,17 @@ function renderBoard (type, missedShots, hitShots) {
         const currentBoard = document.querySelector(`.${ type }`);
         currentBoard.textContent = "";
         currentBoard.appendChild(board);
-    }  
+    }
 };
+
+function showShips(shipSpots, position) {
+    for(let i = 0; i < shipSpots.length; i++) {
+        if (shipSpots[i].positions.includes(position)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 function createHeading(type) {
     const headingNode = document.createElement('div');
@@ -49,7 +62,7 @@ function createHeading(type) {
         headingNode.textContent = "Enemy Waters";
     }
     else if (type === "placement") {
-        headingNode.textContent = "Ready you Ships";
+        headingNode.textContent = "Ready your Ships";
     }
     return headingNode
 }
@@ -68,4 +81,36 @@ function hitShotDOM (position) {
     return hitCircle;
 }
 
-export { renderBoard };
+function addAxisButton (axis) {
+    const boardHeading = document.querySelector('.board-heading');
+    const axisButton = document.createElement('button');
+    axisButton.setAttribute('id', 'axis-toggle');
+    if (axis === "x") {
+        axisButton.textContent = "Axis: X";
+    }
+    else if (axis === "y") {
+        axisButton.textContent = "Axis: Y";
+    }
+    boardHeading.appendChild(axisButton);
+}
+
+function showAvailablePositions(openPositions) {
+    const positions = document.querySelectorAll('.placement button');
+    positions.forEach(position => {
+        if (openPositions.includes(Number(position.getAttribute('data-position')))) {
+            position.classList.remove('unavailable');
+            position.classList.add('available');
+        }
+        else {
+            position.classList.remove('available');
+            position.classList.add('unavailable');
+        }
+    })
+} 
+
+function clearBoardSection () {
+    const boardSection = document.getElementById('boards-section');
+    boardSection.textContent = "";
+}
+
+export { renderBoard, addAxisButton, clearBoardSection, showAvailablePositions };

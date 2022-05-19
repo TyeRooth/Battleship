@@ -6,15 +6,24 @@ const computer = Player("computer");
 const pBoard = player.playerBoard;
 const cBoard = computer.playerBoard;
 
-pBoard.placeShip(2, "y", 3, "Submarine");
-
 computer.setupBoard();
 
-pBoard.updateBoardDOM("player");
-cBoard.updateBoardDOM("enemy");
-
 async function gameFlow () {
+    pBoard.updateBoardDOM("placement");
+    //waitTest is temporary while I understand asynchronous functions
+    function waitTest(x) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(x);
+            }, 3000);
+        });
+    }
+    await player.setupBoard();
+    await waitTest(10);
+    player.removePlacementBoard()
     let turn = 0;
+    pBoard.updateBoardDOM("player");
+    cBoard.updateBoardDOM("enemy");
     do {
         if (turn % 2 === 0) {
             cBoard.receiveAttack(await player.attackEnemy());

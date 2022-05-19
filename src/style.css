@@ -52,6 +52,14 @@ body {
 
 .board-heading {
     color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#axis-toggle {
+    width: max-content;
 }
 
 #credit-section {
@@ -77,6 +85,27 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.available {
+    background-color: blue;
+}
+
+.available:hover {
+    background-color: lightgray;
+}
+
+.unavailable {
+    background-color: midnightblue;
+}
+
+.unavailable:hover {
+    background-color: maroon;
+    cursor:not-allowed;
+}
+
+.ship {
+    background-color: gray;
 }
 
 .enemy button:hover {

@@ -14,4 +14,18 @@ async function addHitButtons (attackedPositions) {
     return await hitPromise;
 };
 
-export {addHitButtons};
+async function chooseShipPosition() {
+    const positions = document.querySelectorAll('.placement button');
+    const placementPromise = new Promise ((resolve) => {
+        positions.forEach(position => {
+            position.addEventListener('click', () => {
+                if (position.classList.contains('available')) {
+                    resolve(position.getAttribute('data-position'));
+                }
+            });  
+        });
+    });
+    return await placementPromise;
+};
+
+export {addHitButtons, chooseShipPosition};
