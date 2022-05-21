@@ -1,5 +1,5 @@
 import { GameBoard } from "./gameBoard";
-import { addHitButtons, chooseShipPosition, computerChooses } from "./helpers";
+import { addHitButtons, chooseShipPosition} from "./helpers";
 import {computerAI} from "./computerAI";
 import { addAxisButton, clearBoardSection, showAvailablePositions, showPossiblePlacement, removeCurrentPlacement } from "./DOM";
 
@@ -30,7 +30,7 @@ const Player = (type) => {
     }
 
     function computerChooses () {
-        const possibleOptions = computerAI(hitLastTurn, prevHits, opponentBoard);
+        const possibleOptions = computerAI(hitLastTurn, prevHits, opponentBoard, attackedPositions);
         nextHits = possibleOptions;
         let index = Math.floor(Math.random() * nextHits.length);
         const shot = nextHits[index];
