@@ -15,7 +15,7 @@ async function gameFlow () {
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve(x);
-            }, 3000);
+            }, 1000);
         });
     }
     await player.setupBoard();
@@ -29,7 +29,11 @@ async function gameFlow () {
             cBoard.receiveAttack(await player.attackEnemy());
         }
         else {
-            pBoard.receiveAttack(await computer.attackEnemy());
+            const position = await computer.attackEnemy()
+            const result = pBoard.receiveAttack(position);
+            if (result) {
+                computer.configureMemory(result, position, pBoard);
+            }
         }
         pBoard.updateBoardDOM("player");
         cBoard.updateBoardDOM("enemy");

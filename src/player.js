@@ -1,5 +1,6 @@
 import { GameBoard } from "./gameBoard";
-import { addHitButtons, chooseShipPosition } from "./helpers";
+import { addHitButtons, chooseShipPosition, computerChooses } from "./helpers";
+import {computerAI} from "./computerAI";
 import { addAxisButton, clearBoardSection, showAvailablePositions, showPossiblePlacement, removeCurrentPlacement } from "./DOM";
 
 const Player = (type) => {
@@ -8,13 +9,49 @@ const Player = (type) => {
     let playerBoard = GameBoard()
     let axis = "x";
 
+    //These variables are all important for computer AI.
+    let hitLastTurn = false;
+    let prevHits = [];
+    let nextHits = [];
+    let opponentBoard = GameBoard();
+
+    function configureMemory (result, position, opponent) {
+        hitLastTurn = result;
+        // Add hit to current hit array if successful
+        if (hitLastTurn) {
+            prevHits.push(position);
+        }
+        // If shot missed and there are no more possible options, go back to random
+        else if (nextHits.length === 0) {
+            prevHits = [];
+        }
+        // If shot missed, try another possible option
+        opponentBoard = opponent;
+    }
+
+    function computerChooses () {
+        const possibleOptions = computerAI(hitLastTurn, prevHits, opponentBoard);
+        nextHits = possibleOptions;
+        let index = Math.floor(Math.random() * nextHits.length);
+        const shot = nextHits[index];
+        nextHits.splice(index, 1);
+        return shot;
+    };
+
     async function attackEnemy () {
         if (type === "computer") {
-            let index = Math.floor(Math.random() * openPositions.length);
-            let position = openPositions[index];
-            openPositions.splice(index, 1);
-            attackedPositions.push(position);
-            return position;
+            if (!hitLastTurn && prevHits.length === 0) {
+                let index = Math.floor(Math.random() * openPositions.length);
+                let position = openPositions[index];
+                openPositions.splice(index, 1);
+                attackedPositions.push(position);
+                return position;
+            }
+            else {
+                const test = computerChooses();
+                console.log(test);
+                return test;
+            };
         }
         else if (type === "player") {
             let position = Number(await addHitButtons(attackedPositions));
@@ -67,12 +104,10 @@ const Player = (type) => {
                 const boardSpot = document.querySelector(`[data-position="${shipSpots[i]}"]`);
                 boardSpot.classList.add('ship');
             }
-            console.log(position);
         }
     }
 
     function switchOpens (xPos, yPos, length) {
-        playerBoard.updateBoardDOM("placement");
         if (axis === "x") {
             showAvailablePositions(xPos);
             showPlacement(xPos, length);
@@ -83,6 +118,7 @@ const Player = (type) => {
         }
         const axisButton = document.getElementById('axis-toggle');
         axisButton.addEventListener('click', () => {
+            playerBoard.updateBoardDOM("placement");
             if (axis === "x") {
                 showAvailablePositions(xPos);
                 showPlacement(xPos, length);
@@ -118,6 +154,7 @@ const Player = (type) => {
         attackEnemy,
         setupBoard,
         removePlacementBoard,
+        configureMemory,
         playerBoard,
         attackedPositions
     }

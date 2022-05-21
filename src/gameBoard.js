@@ -31,11 +31,12 @@ const GameBoard = () => {
                 if (ships[i].positions[j] === position) {
                     ships[i].hit(position);
                     hitShots.push(position);
-                    return;
+                    return true;
                 }
             }
         }
         missedShots.push(position);
+        return false;
     }
 
     function checkLoseCondition () {
