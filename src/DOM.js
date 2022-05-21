@@ -106,11 +106,41 @@ function showAvailablePositions(openPositions) {
             position.classList.add('unavailable');
         }
     })
-} 
+}
+
+function showPossiblePlacement (axis, length, coordinate) {
+    if (axis === "x") {
+        for (let i = 0; i < length; i++) {
+            const placement = document.querySelector(`[data-position="${coordinate + i}"]`);
+            placement.classList.add("possible-placement");
+        }
+    }
+    else if (axis === "y") {
+        for (let i = 0; i < length; i++) {
+            const placement = document.querySelector(`[data-position="${coordinate + i * 10}"]`);
+            placement.classList.add("possible-placement");
+        }
+    }
+}
+
+function removeCurrentPlacement (axis, length, coordinate) {
+    if (axis === "x") {
+        for (let i = 0; i < length; i++) {
+            const placement = document.querySelector(`[data-position="${coordinate + i}"]`);
+            placement.classList.remove("possible-placement");
+        }
+    }
+    else if (axis === "y") {
+        for (let i = 0; i < length; i++) {
+            const placement = document.querySelector(`[data-position="${coordinate + i * 10}"]`);
+            placement.classList.remove("possible-placement");
+        }
+    }  
+}
 
 function clearBoardSection () {
     const boardSection = document.getElementById('boards-section');
     boardSection.textContent = "";
 }
 
-export { renderBoard, addAxisButton, clearBoardSection, showAvailablePositions };
+export { renderBoard, addAxisButton, clearBoardSection, showAvailablePositions, showPossiblePlacement, removeCurrentPlacement };
