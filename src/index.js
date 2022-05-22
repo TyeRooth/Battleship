@@ -38,6 +38,13 @@ async function gameFlow () {
         turn++
     }
     while (!pBoard.checkLoseCondition() && !cBoard.checkLoseCondition());
+    const message = document.getElementById('message-section');
+    if (pBoard.checkLoseCondition()) {
+        message.textContent = "Computer has won the game";
+    }
+    else if (cBoard.checkLoseCondition()) {
+        message.textContent = "Player has won the game";
+    }
     pBoard.updateBoardDOM("player");
     cBoard.updateBoardDOM("enemy");
 }

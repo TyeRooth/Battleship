@@ -12,21 +12,27 @@ function computerAI (prevHits, board, attackedPositions, startRandom, hitLastTur
     console.log(nextHits);
     console.log(prevHits);
 
+    //Making it so that the computer is random for now
+    if(true) {return randomShot()};
+
     //Once AI has found multiple ship direction
-    if (checkForMultipleAxis(prevHits) && nextHits.length === 0  && prevHits.length > 1) {
+    console.log(checkForMultipleAxis(prevHits))
+    if (checkForMultipleAxis(prevHits) && hitLastTurn && prevHits.length > 1) {
         console.log("multiple axis");
-        return caseThree()
+        const newShipArray = [prevHits[prevHits.length - 2], prevHits[prevHits.length - 1]];
+        console.log(newShipArray);
+        return caseThree(newShipArray);
     }
 
     else if (checkForMultipleAxis(prevHits) && prevHits.length > 1) {
         console.log("working good");
-        return caseFour();
+        return caseFour(prevHits, hitLastTurn);
     }
 
     // Remove hits from sunk ship so computer starts attacking other grouped ship(s)
 
     //Case 0: No previous hits, computer makes random shot
-    else if (startRandom) {
+    else if (startRandom && prevHits.length === 0) {
         return randomShot();
     }
 
@@ -37,24 +43,32 @@ function computerAI (prevHits, board, attackedPositions, startRandom, hitLastTur
         return caseOne(prevHits[0]);
     }
 
-    //Case 5: Computer hits multiple ships in same set
-    //Before case 3 due to how cond. work
-    else if (nextHits.length === 0 && prevHits.length > 1) {
-        console.log("multipleships");
-        const randomIndex = Math.floor(Math.random() * prevHits.length);
-        rememberSplit = caseOne(prevHits[randomIndex]);
-        return rememberSplit;
-    }
-
     //Case 3: Computer has made two hits adjacent to each other
     else if (prevHits.length === 2) {
-        return caseThree (prevHits); 
+        //Cond. needed for special case where computer two boats are beside each other
+        if (hitLastTurn) {
+            return caseThree (prevHits); 
+        }
     }
 
     //Case 4: Computer has determined direction and all possible next hits
     else if (prevHits.length > 2 && nextHits.length !== 0) {
-        return caseFour();
+        return caseFour(prevHits, hitLastTurn);
     }
+
+        //Case 5: Computer hits multiple ships in same set
+    //Before case 3 due to how cond. work
+    else if (nextHits.length === 0 && prevHits.length > 1) {
+        console.log("multipleships");
+        const randomIndex = Math.floor(Math.random() * prevHits.length);
+        emptyNexts();
+        console.log(nextHits);
+        return caseOne(prevHits[prevHits.length - 1]);
+    }
+}
+
+function emptyNexts () {
+    nextHits.splice(0, nextHits.length);
 }
 
 function caseOne (position) {
@@ -75,7 +89,25 @@ function caseThree (prevHits) {
     return next;
 }
 
-function caseFour () {
+function caseFour (prevHits, hitLastTurn) {
+    if (!hitLastTurn) {
+        const difference = prevHits[1] - prevHits[0];
+        //first set deals with initial direction
+        if (difference > 0) {
+            nextHits = nextHits.filter(hit => hit < prevHits[1]);
+        }
+        else if (difference < 0) {
+            nextHits = nextHits.filter(hit => hit > prevHits[0]);
+        }
+        // Second set deals with opposite direction
+        const difAbs = Math.abs(difference);
+        if(Math.max(prevHits) + difAbs * 1 < nextHits[0]) {
+            nextHits = nextHits.filter(hit => hit < nextHits[0]);
+        }
+        else if (Math.max(prevHits) + difAbs * 1 < nextHits[0]) {
+            nextHits = nextHits.filter(hit => hit > nextHits[0]);
+        }
+    }
     const next = [nextHits[0]];
     nextHits.splice(0, 1);
     return next; 
@@ -85,11 +117,16 @@ function checkForMultipleAxis (pastHits) {
     const rowSize = 10;
     const row = Math.floor(pastHits[0] / rowSize);
     const column = pastHits[0] % rowSize;
-    return pastHits.every(sameColumn || sameRow);
-    function sameColumn (element) {
+    const columnCheck = pastHits.some(difColumn);
+    const rowCheck = pastHits.some(difRow);
+    if (columnCheck && rowCheck) {
+        return true;
+    }
+    else {return false};
+    function difColumn (element) {
         return (element % rowSize) !== column;
     }
-    function sameRow (element) {
+    function difRow (element) {
         return (Math.floor(element / rowSize)) !== row;
     }
 }
@@ -108,7 +145,7 @@ function randomShot () {
 function addFutureShots (difference, pastHits) {
     const newHit = pastHits[pastHits.length -1]
     // Loop through and three possible hits in each direction unless already attacked or border
-    for (let i = 0; i < 3; i++) {
+    for (let i = 1; i <= 3; i++) {
         const nextTurn = [newHit + difference * i];
         if (checkAlreadyHit(nextTurn).length === 1) {
             if (checkWithinBoard(nextTurn, newHit, difference)) {
@@ -116,7 +153,6 @@ function addFutureShots (difference, pastHits) {
             }
         }
     }
-    console.log(nextHits);
     // Opposite direction possibilities
     for (let i = 1; i <= 3; i++) {
         const nextTurn = [pastHits[0] - difference * i];
@@ -126,7 +162,6 @@ function addFutureShots (difference, pastHits) {
             }
         }
     }
-    console.log(nextHits);
 }
 
 // Separate border function needed for getting next hits

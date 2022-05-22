@@ -14,13 +14,14 @@ const Player = (type) => {
     let prevHits = [];
     let opponentBoard = GameBoard();
     let startRandom = true;
+    let recentSunkPositions = [];
 
     function configureMemory (result, position, opponent) {
         // This configuration leads back to random picks
         // Computer stops purposeful picking once ship has been sunk
         opponentBoard = opponent;
         if (hitsSunkShip()) {
-            prevHits.length = 0;
+            prevHits = prevHits.filter(position => !recentSunkPositions.includes(position));
         }
         // Add hit to current hit array if successful
         if (result) {
@@ -42,6 +43,7 @@ const Player = (type) => {
                 }
             }
             if (hitCount === enemyShips[i].positions.length) {
+                recentSunkPositions = enemyShips[i].positions;
                 return true;
             }
         }
