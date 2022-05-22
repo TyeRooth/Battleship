@@ -26,7 +26,6 @@ const Player = (type) => {
         if (result) {
             prevHits.push(position);
         }
-
         // Unfortunately, I need to check for sunk to add it to AI cond.
         startRandom = !hitsSunkShip() && prevHits.length !== 0 ? false : true;
         hitLastTurn = result;
@@ -50,7 +49,7 @@ const Player = (type) => {
     }
 
     function computerChooses () {
-        const possibleOptions = computerAI(prevHits, opponentBoard, attackedPositions, startRandom);
+        const possibleOptions = computerAI(prevHits, opponentBoard, attackedPositions, startRandom, hitLastTurn);
         console.log(possibleOptions);
         let index = Math.floor(Math.random() * possibleOptions.length);
         const shot = possibleOptions[index];
