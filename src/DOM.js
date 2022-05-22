@@ -27,8 +27,11 @@ function renderBoard (type, missedShots, hitShots, shipSpots) {
         else {
             position.textContent = i;
         }
-        if (type === "player"  && showShips(shipSpots, i)) {
+        if (type === "player" && showShips(shipSpots, i)) {
            position.classList.add('ship');
+        }
+        else if (type === "placement" && showShips(shipSpots, i)) {
+            position.classList.add("ship");
         }
         board.appendChild(position);
     };

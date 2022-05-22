@@ -16,17 +16,18 @@ const Player = (type) => {
     let opponentBoard = GameBoard();
 
     function configureMemory (result, position, opponent) {
-        hitLastTurn = result;
+        // This configuration leads back to random picks
+        if (hitLastTurn === false && result === false && nextHits.length === 0) {
+            prevHits.length = 0;
+            console.log(prevHits);
+        }
+        
         // Add hit to current hit array if successful
         if (hitLastTurn) {
             prevHits.push(position);
         }
-        // If shot missed and there are no more possible options, go back to random
-        else if (nextHits.length === 0) {
-            prevHits = [];
-        }
-        // If shot missed, try another possible option
         opponentBoard = opponent;
+        hitLastTurn = result;
     }
 
     function computerChooses () {
@@ -108,6 +109,7 @@ const Player = (type) => {
     }
 
     function switchOpens (xPos, yPos, length) {
+        playerBoard.updateBoardDOM("placement");
         if (axis === "x") {
             showAvailablePositions(xPos);
             showPlacement(xPos, length);
@@ -118,17 +120,33 @@ const Player = (type) => {
         }
         const axisButton = document.getElementById('axis-toggle');
         axisButton.addEventListener('click', () => {
-            playerBoard.updateBoardDOM("placement");
             if (axis === "x") {
                 showAvailablePositions(xPos);
-                showPlacement(xPos, length);
+                showPlacement(xPos, getLength());
             }
             else if (axis === "y") {
                 showAvailablePositions(yPos);
-                showPlacement(yPos, length);
+                showPlacement(yPos, getLength());
             }
-        });
+        }); 
     };
+
+    // I dislike hard coding things, but I need to do this for the axistoggle button.
+    // The placement size stays at five unless I cancel the event listeners required
+    // for the async player pick
+    function getLength () {
+        let currentPlacement = playerBoard.ships.length;
+        for (let i = 0; i < 3; i++) {
+            if (currentPlacement === i) {
+                return 5 - i
+            }
+        }
+        for (let i = 3; i < 5; i++) {
+            if (currentPlacement === i) {
+                return 6 - i;
+            }
+        }
+    }
 
     function showPlacement (positions, length) {
         const boardPositions = document.querySelectorAll('.placement button');

@@ -31,9 +31,7 @@ async function gameFlow () {
         else {
             const position = await computer.attackEnemy()
             const result = pBoard.receiveAttack(position);
-            if (result) {
-                computer.configureMemory(result, position, pBoard);
-            }
+            computer.configureMemory(result, position, pBoard);
         }
         pBoard.updateBoardDOM("player");
         cBoard.updateBoardDOM("enemy");
