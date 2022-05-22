@@ -8,6 +8,8 @@ let alreadyAttacked = [];
 function computerAI (prevHits, board, attackedPositions, startRandom) {
     opponentBoard = board;
     alreadyAttacked = attackedPositions;
+    console.log(nextHits);
+    console.log(prevHits);
 
     //Case 0: No previous hits, computer makes random shot
     if (startRandom) {
@@ -33,7 +35,6 @@ function computerAI (prevHits, board, attackedPositions, startRandom) {
         // The AI should have generated a full next steps list as this point
         const next = [nextHits[0]];
         nextHits.splice(0, 1);
-        console.log(next);
         return next;
     }
 
@@ -41,7 +42,6 @@ function computerAI (prevHits, board, attackedPositions, startRandom) {
     else if (prevHits.length > 2 && nextHits.length !== 0) {
         const next = [nextHits[0]];
         nextHits.splice(0, 1);
-        console.log(next);
         return next;
     }
 }
@@ -53,8 +53,6 @@ function randomShot () {
             openPositions.splice(i, 1);
         }
     };
-    console.log(alreadyAttacked);
-    console.log(openPositions);
     let index = Math.floor(Math.random() * openPositions.length);
     return [openPositions[index]];
 }
@@ -63,30 +61,49 @@ function addFutureShots (difference, pastHits) {
     const newHit = pastHits[pastHits.length -1]
     // Loop through and three possible hits in each direction unless already attacked or border
     for (let i = 0; i < 3; i++) {
-        const nextTurn = [newHit + difference + i];
+        const nextTurn = [newHit + difference * i];
         if (checkAlreadyHit(nextTurn).length === 1) {
-            const borderTest = checkBoardEdge(newHit);
-            if (borderTest.includes(nextTurn)) {
-                break;
+            if (checkWithinBoard(nextTurn, newHit, difference)) {
+                nextHits.push(nextTurn[0]);
             }
-            nextHits.push(nextTurn[0]);
         }
-        else {break};
     }
     console.log(nextHits);
     // Opposite direction possibilities
     for (let i = 1; i <= 3; i++) {
         const nextTurn = [pastHits[0] - difference * i];
+        console.log(checkAlreadyHit(nextTurn).length === 1);
         if (checkAlreadyHit(nextTurn).length === 1) {
-            const borderTest = checkBoardEdge(pastHits[0]);
-            if (borderTest.includes(nextTurn)) {
-                break;
+            if (checkWithinBoard(nextTurn, newHit, difference)) {
+                nextHits.push(nextTurn[0]);
             }
-            nextHits.push(nextTurn[0]);
         }
-        else {break};
     }
     console.log(nextHits);
+}
+
+// Separate border function needed for getting next hits
+function checkWithinBoard (possible, alreadyHit, difference) {
+    const rowChange = 10;
+    const columnChange = 1;
+    if (Math.abs(difference) === rowChange) {
+        if (possible < 0 || possible > 99) {
+            return false;
+        }
+        return true;
+    }
+    if (Math.abs(difference) === columnChange) {
+        const row = getRow(alreadyHit);
+        console.log(Math.floor(possible / 10));
+        // Have to add !== 0 to account for 0 / 10 edge case
+        if(getRow(possible) !== row && possible !== 0) {
+            return false;
+        }
+        return true;
+    }
+    function getRow (position) {
+        return Math.floor(position / 10);
+    }
 }
 
 function checkAlreadyHit (possibleHits) {
