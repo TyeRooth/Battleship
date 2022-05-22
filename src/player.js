@@ -12,47 +12,58 @@ const Player = (type) => {
     //These variables are all important for computer AI.
     let hitLastTurn = false;
     let prevHits = [];
-    let nextHits = [];
     let opponentBoard = GameBoard();
+    let startRandom = true;
 
     function configureMemory (result, position, opponent) {
         // This configuration leads back to random picks
-        if (hitLastTurn === false && result === false && nextHits.length === 0) {
+        // Computer stops purposeful picking once ship has been sunk
+        opponentBoard = opponent;
+        if (hitsSunkShip()) {
             prevHits.length = 0;
-            console.log(prevHits);
         }
-        
         // Add hit to current hit array if successful
-        if (hitLastTurn) {
+        if (result) {
             prevHits.push(position);
         }
-        opponentBoard = opponent;
+
+        // Unfortunately, I need to check for sunk to add it to AI cond.
+        startRandom = !hitsSunkShip() && prevHits.length !== 0 ? false : true;
         hitLastTurn = result;
     }
 
+    // Check whether a ship has been sunk in the recent aimed shots
+    function hitsSunkShip () {
+        const enemyShips = opponentBoard.ships;
+        for (let i = 0; i < enemyShips.length; i++) {
+            let hitCount = 0;
+            for (let j = 0; j < enemyShips[i].positions.length; j++) {
+                if (prevHits.includes(enemyShips[i].positions[j])) {
+                    hitCount++;
+                }
+            }
+            if (hitCount === enemyShips[i].positions.length) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function computerChooses () {
-        const possibleOptions = computerAI(hitLastTurn, prevHits, opponentBoard, attackedPositions);
-        nextHits = possibleOptions;
-        let index = Math.floor(Math.random() * nextHits.length);
-        const shot = nextHits[index];
-        nextHits.splice(index, 1);
+        const possibleOptions = computerAI(prevHits, opponentBoard, attackedPositions, startRandom);
+        console.log(possibleOptions);
+        let index = Math.floor(Math.random() * possibleOptions.length);
+        const shot = possibleOptions[index];
         return shot;
     };
 
     async function attackEnemy () {
         if (type === "computer") {
-            if (!hitLastTurn && prevHits.length === 0) {
-                let index = Math.floor(Math.random() * openPositions.length);
-                let position = openPositions[index];
-                openPositions.splice(index, 1);
-                attackedPositions.push(position);
-                return position;
-            }
-            else {
-                const test = computerChooses();
-                console.log(test);
-                return test;
-            };
+            const chosenPosition = computerChooses();
+            const positionIndex = openPositions.findIndex(index => index === chosenPosition);
+            openPositions.splice(positionIndex, 1);
+            attackedPositions.push(chosenPosition);
+            return chosenPosition;
         }
         else if (type === "player") {
             let position = Number(await addHitButtons(attackedPositions));
