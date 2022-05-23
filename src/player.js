@@ -2,6 +2,7 @@ import { GameBoard } from "./gameBoard";
 import { addHitButtons, chooseShipPosition} from "./helpers";
 import {computerAI} from "./computerAI";
 import { addAxisButton, clearBoardSection, showAvailablePositions, showPossiblePlacement, removeCurrentPlacement } from "./DOM";
+import { compAI } from "./compAI";
 
 const Player = (type) => {
     let attackedPositions = [];
@@ -32,6 +33,12 @@ const Player = (type) => {
         hitLastTurn = result;
     }
 
+    //Different Approach to AI, trying more OOP way
+    let ai = compAI;
+    function testAI () {
+        return ai.generateNextHit();
+    }
+
     // Check whether a ship has been sunk in the recent aimed shots
     function hitsSunkShip () {
         const enemyShips = opponentBoard.ships;
@@ -52,7 +59,6 @@ const Player = (type) => {
 
     function computerChooses () {
         const possibleOptions = computerAI(prevHits, opponentBoard, attackedPositions, startRandom, hitLastTurn);
-        console.log(possibleOptions);
         let index = Math.floor(Math.random() * possibleOptions.length);
         const shot = possibleOptions[index];
         return shot;
@@ -186,6 +192,8 @@ const Player = (type) => {
         removePlacementBoard,
         configureMemory,
         playerBoard,
+        testAI,
+        ai,
         attackedPositions
     }
 }

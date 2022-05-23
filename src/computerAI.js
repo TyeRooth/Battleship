@@ -9,8 +9,6 @@ let rememberSplit;
 function computerAI (prevHits, board, attackedPositions, startRandom, hitLastTurn) {
     opponentBoard = board;
     alreadyAttacked = attackedPositions;
-    console.log(nextHits);
-    console.log(prevHits);
 
     //Making it so that the computer is random for now
     if(true) {return randomShot()};

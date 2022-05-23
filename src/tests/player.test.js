@@ -13,7 +13,7 @@ beforeEach(() => {
     boardTwo = opponent.playerBoard;
 });
 
-it('computer hits 20 different spots on board', () => {
+it.skip('computer hits 20 different spots on board', () => {
     const setCheck = new Set();
     for(let i = 0; i < 20; i++) {
         computer.attackEnemy();
@@ -23,7 +23,7 @@ it('computer hits 20 different spots on board', () => {
     expect(setCheck.size).toBe(computer.attackedPositions.length);
 });
 
-it('computer hits only positions on the board', () => {
+it.skip('computer hits only positions on the board', () => {
     for(let i = 0; i < 20; i++) {
         computer.attackEnemy();
     };
