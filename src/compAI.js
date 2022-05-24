@@ -9,6 +9,7 @@ let compAI = {
     activeHits : [],
     curDir : null,
     changedDir : false,
+    storedHits : [],
 
     // Required for AI to recognize whether a hit has been made
     addOpponentShips : function (board) {
@@ -37,10 +38,28 @@ let compAI = {
         this.possibleHits = [];
         this.activeHits = [];
         this.curDir = null;
+        //For multiple ship instances
+        this.storedHits = [];
     },
 
     wasHit : function (coord) {
         return this.possibleHits.includes(coord); 
+    },
+
+    //This checks whether AI can follow regular pattern or needs to change directions due to limits
+    checkNextAvailable : function () {
+        const possibleArray = checkDirectionAvailable(this.lastHit, this.missed, this.hit);
+        const reverseArray = checkDirectionAvailable(this.activeHits[0], this.missed, this.hit);
+        if (possibleArray.includes(this.curDir)) {
+            return this.lastHit;
+        }
+        else if (reverseArray.includes(oppDir(this.curDir))) {
+            return this.activeHits[0];
+        }
+        //Starts multiple ships decision process.
+        else {
+            return this.activeHits;
+        }
     },
 
     // Test to see whether generated shot is a hit and changes the object accordingly
@@ -63,6 +82,10 @@ let compAI = {
     //Main method
     testAI : function () {
         this.activeHits = removeSunkShip(this.activeHits, this.opponentShips);
+        // Check for multiple ship configuration
+        if (this.checkNextAvailable()) {
+            console.log(3);
+        }
         //After first hit after random period
         if (this.activeHits.length === 1) {
             const posDir = checkDirectionAvailable(this.lastHit, this.missed, this.hit);
@@ -80,9 +103,13 @@ let compAI = {
             }
             return this.configureAI(newShot);
         }
-        // After two adjacent coords have been hit
-        else if (this.activeHits.length === 2 && this.lastShotWasHit) {
-            let newShot = createNewShot(this.lastHit, this.curDir);
+        // After two or more adjacent coords have been hit
+        else if (this.activeHits.length > 1 && this.lastShotWasHit) {
+            const branchingHit = this.checkNextAvailable();
+            if (branchingHit === this.activeHits[0]) {
+                this.curDir = oppDir(this.curDir);
+            }
+            let newShot = createNewShot(branchingHit, this.curDir);
             return this.configureAI(newShot);
         }
         // A miss after consecutive hits to change directions

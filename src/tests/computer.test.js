@@ -9,6 +9,7 @@ beforeEach(() => {
     opponent = Player("computer").playerBoard;
     ai = computer.ai;
     ai.resetAI();
+    // Makes random calls 0.83 every time
     jest.spyOn(global.Math, 'random').mockReturnValue(0.83);
 })
 
@@ -38,15 +39,22 @@ describe('test random picks on empty board', () => {
     })
 })
 
-describe('test AI on board with separated and borderless ships', () => {
+describe('test AI on board with ships', () => {
     beforeEach(() => {
+        // Separated ship
         opponent.placeShip(11, "x", 3, "Submarine");
-        opponent.placeShip(19, "y", 3, "Destroyer");
+        //Border ship
+        opponent.placeShip(60, "y", 4, "Battleship");
+        //Adjacent ships
+        opponent.placeShip(96, "x", 4, "Battleship");
+        opponent.placeShip(87, "x", 3, "Destroyer");
+        opponent.placeShip(78, "x", 2, "Patrol Boat");
+
         ai.addOpponentShips(opponent); 
     })
 
     it ("opponent's ship positions are added to AI object", () => {
-        expect (ai.possibleHits.length).toBe(6);
+        expect (ai.possibleHits.length).toBe(16);
     })
 
     it ("computer hits consecutive coordinate after hit", () => {
@@ -82,5 +90,37 @@ describe('test AI on board with separated and borderless ships', () => {
         ai.curDir = "right";
         ai.testAI();
         expect (ai.testAI()).toBe(11);
+    })
+
+    it("computer moves in opposite direction if there is a miss shot past ship", () => {
+        ai.manualAdd(14);
+        ai.manualAdd(12);
+        ai.manualAdd(13);
+        ai.curDir = "right";
+        expect (ai.testAI()).toBe(11);
+    })
+
+    it("computer moves in opposite direction if there is a border past ship", () => {
+        ai.manualAdd(80);
+        ai.manualAdd(90);
+        ai.curDir = "down";
+        expect (ai.testAI()).toBe(70);
+    })
+
+    it("computer can sink ship with more than three coords", () => {
+        ai.manualAdd(60);
+        ai.manualAdd(70);
+        ai.curDir = "down";
+        ai.testAI();
+        expect (ai.testAI()).toBe(90);
+    })
+
+    it("computer can detect multiple ships", () => {
+        ai.manualAdd(78);
+        ai.manualAdd(88);
+        ai.curDir = "down";
+        ai.testAI();
+        ai.testAI();
+        expect (ai.testAI()).toBe(77);
     })
 }) 
