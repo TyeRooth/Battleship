@@ -43,7 +43,7 @@ describe('test AI on board with separated and borderless ships', () => {
         opponent.placeShip(11, "x", 3, "Submarine");
         opponent.placeShip(19, "y", 3, "Destroyer");
         ai.addOpponentShips(opponent); 
-    });
+    })
 
     it ("opponent's ship positions are added to AI object", () => {
         expect (ai.possibleHits.length).toBe(6);
@@ -73,7 +73,14 @@ describe('test AI on board with separated and borderless ships', () => {
         ai.manualAdd(11);
         ai.manualAdd(12);
         ai.manualAdd(13);
-        // Testing random so toBe may be wrong
         expect (ai.testAI()).toBe(83);
+    })
+
+    it ("computer sinks ship if first hit is in the middle of ship", () => {
+        ai.manualAdd(12);
+        ai.manualAdd(13);
+        ai.curDir = "right";
+        ai.testAI();
+        expect (ai.testAI()).toBe(11);
     })
 }) 

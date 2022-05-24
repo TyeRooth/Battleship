@@ -8,6 +8,7 @@ let compAI = {
     possibleHits : [],
     activeHits : [],
     curDir : null,
+    changedDir : false,
 
     // Required for AI to recognize whether a hit has been made
     addOpponentShips : function (board) {
@@ -21,7 +22,7 @@ let compAI = {
 
     //Manual add is used in my tests for the computer
     manualAdd : function (coord) {
-        this.removeSunkShip(this.activeHits, this.opponentShips);
+        this.activeHits = removeSunkShip(this.activeHits, this.opponentShips);
         this.configureAI(coord);
     },
 
@@ -59,40 +60,12 @@ let compAI = {
         return newShot;
     },
 
-    // This is how the computer will be able to tell it has sunk a ship
-    // If activeHits.length === 0 after this, computer will shoot randomly again
-    removeSunkShip : function (active, ships) {
-        let sunkPositions = [];
-        for (let i = 0; i < ships.length; i++) {
-            let hitCount = 0;
-            for (let j = 0; j < ships[i].positions.length; j++) {
-                if (active.includes(ships[i].positions[j])) {
-                    hitCount++;
-                }
-            }
-            if (hitCount === ships[i].positions.length) {
-                sunkPositions = ships[i].positions;
-            }
-        }
-        for (let i = 0; i < sunkPositions.length; i++) {
-            for (let j = active.length - 1; j >= 0; j--) {
-                if (sunkPositions.includes(active[j])) {
-                    active.splice(j, 1);
-                }
-            }
-        }
-        this.activeHits = active;
-    },
-
     //Main method
     testAI : function () {
-        this.removeSunkShip(this.activeHits, this.opponentShips);
+        this.activeHits = removeSunkShip(this.activeHits, this.opponentShips);
         //After first hit after random period
-        if (this.lastShotWasHit && this.activeHits.length === 1) {
+        if (this.activeHits.length === 1) {
             const posDir = checkDirectionAvailable(this.lastHit, this.missed, this.hit);
-            console.log(posDir);
-            console.log(this.hit);
-            console.log(this.missed);
             this.curDir = posDir[randomIndex(posDir)];
             let newShot = createNewShot(this.lastShot, this.curDir);
             return this.configureAI(newShot);
@@ -108,8 +81,14 @@ let compAI = {
             return this.configureAI(newShot);
         }
         // After two adjacent coords have been hit
-        else if (this.activeHits.length === 2) {
+        else if (this.activeHits.length === 2 && this.lastShotWasHit) {
             let newShot = createNewShot(this.lastHit, this.curDir);
+            return this.configureAI(newShot);
+        }
+        // A miss after consecutive hits to change directions
+        else if (this.activeHits.length > 1 && !this.lastShotWasHit) {
+            this.curDir = oppDir(this.curDir);
+            let newShot = createNewShot(this.activeHits[0], this.curDir);
             return this.configureAI(newShot);
         }
     }
@@ -140,6 +119,31 @@ function createNewShot (position, direction) {
     }
 }
 
+// This is how the computer will be able to tell it has sunk a ship
+// If activeHits.length === 0 after this, computer will shoot randomly again
+function removeSunkShip (active, ships) {
+    let sunkPositions = [];
+    for (let i = 0; i < ships.length; i++) {
+        let hitCount = 0;
+        for (let j = 0; j < ships[i].positions.length; j++) {
+            if (active.includes(ships[i].positions[j])) {
+                hitCount++;
+            }
+        }
+        if (hitCount === ships[i].positions.length) {
+            sunkPositions = ships[i].positions;
+        }
+    }
+    for (let i = 0; i < sunkPositions.length; i++) {
+        for (let j = active.length - 1; j >= 0; j--) {
+            if (sunkPositions.includes(active[j])) {
+                active.splice(j, 1);
+            }
+        }
+    }
+    return active;
+}
+
 function checkDirectionAvailable (coord, hits, misses) {
     let possibleDirections = [];
     const rowDif = 10;
@@ -168,6 +172,21 @@ function checkNotShot (coord, hitArray, missArray) {
         return true;
     }
     else {false;}
+}
+
+function oppDir(dir) {
+    if (dir === "up") {
+        return "down";
+    }
+    else if (dir === "right") {
+        return "left";
+    }
+    else if (dir === "down") {
+        return "up";
+    }
+    else if (dir === "left") {
+        return "right";
+    }
 }
 
 //I will be using this a lot
