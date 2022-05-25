@@ -49,12 +49,15 @@ describe('test AI on board with ships', () => {
         opponent.placeShip(96, "x", 4, "Battleship");
         opponent.placeShip(87, "x", 3, "Destroyer");
         opponent.placeShip(78, "x", 2, "Patrol Boat");
+        // T layout ships
+        opponent.placeShip(27, "x", 3, "T-top");
+        opponent.placeShip(38, "y", 3, "T-bottom");
 
         ai.addOpponentShips(opponent); 
     })
 
     it ("opponent's ship positions are added to AI object", () => {
-        expect (ai.possibleHits.length).toBe(16);
+        expect (ai.possibleHits.length).toBe(22);
     })
 
     it ("computer hits consecutive coordinate after hit", () => {
@@ -115,12 +118,33 @@ describe('test AI on board with ships', () => {
         expect (ai.testAI()).toBe(90);
     })
 
-    it("computer can detect multiple ships", () => {
+    it("computer can detect and sink multiple ships", () => {
         ai.manualAdd(78);
         ai.manualAdd(88);
         ai.curDir = "down";
         ai.testAI();
         ai.testAI();
         expect (ai.testAI()).toBe(77);
+        expect (ai.testAI()).toBe(79);
+        expect (ai.testAI()).toBe(87);
+        expect (ai.testAI()).toBe(86);
+        expect (ai.testAI()).toBe(89);
+        expect (ai.testAI()).toBe(97);
+        expect (ai.testAI()).toBe(96);
+        expect (ai.testAI()).toBe(95);
+        expect (ai.testAI()).toBe(99);
+        // Adding a random one as well
+        expect (ai.testAI()).toBe(73);
     })
-}) 
+
+    it("computer can detect and sink multiple ships in a T layout", () => {
+        ai.manualAdd(28);
+        ai.manualAdd(38);
+        ai.curDir = "down";
+        ai.testAI();
+        ai.testAI();
+        expect(ai.testAI()).toBe(27);
+        expect(ai.testAI()).toBe(26);
+        expect(ai.testAI()).toBe(29);
+    })
+})

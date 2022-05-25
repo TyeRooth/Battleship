@@ -56,9 +56,31 @@ let compAI = {
         else if (reverseArray.includes(oppDir(this.curDir))) {
             return this.activeHits[0];
         }
-        //Starts multiple ships decision process.
-        else {
-            return this.activeHits;
+    },
+
+    checkMultiple : function () {
+        if (this.activeHits.length > 1 && this.storedHits.length === 0) {
+            const possibleArray = checkDirectionAvailable(this.lastHit, this.missed, this.hit);
+            const reverseArray = checkDirectionAvailable(this.activeHits[0], this.missed, this.hit);
+            if (!possibleArray.includes(this.curDir) && !reverseArray.includes(oppDir(this.curDir))) {
+                return true;
+            }
+        }
+        else if (this.storedHits.length > 0) {
+            return true;
+        }
+        return false;        
+    },
+
+    configureMultipleShips : function () {
+        if (this.storedHits.length === 0) {
+            const startingLength = this.activeHits.length;
+            for (let i = 0; i < startingLength - 1; i++) {
+                this.storedHits.push(this.activeHits.pop());
+            }
+        }
+        else if (this.storedHits.length > 0 && this.activeHits.length === 0) {
+            this.activeHits.push(this.storedHits.pop());
         }
     },
 
@@ -82,15 +104,15 @@ let compAI = {
     //Main method
     testAI : function () {
         this.activeHits = removeSunkShip(this.activeHits, this.opponentShips);
-        // Check for multiple ship configuration
-        if (this.checkNextAvailable()) {
-            console.log(3);
+        // Check for multiple ships and configure object if needed
+        if (this.checkMultiple()) {
+            this.configureMultipleShips();
         }
         //After first hit after random period
         if (this.activeHits.length === 1) {
-            const posDir = checkDirectionAvailable(this.lastHit, this.missed, this.hit);
+            const posDir = checkDirectionAvailable(this.activeHits[0], this.missed, this.hit);
             this.curDir = posDir[randomIndex(posDir)];
-            let newShot = createNewShot(this.lastShot, this.curDir);
+            let newShot = createNewShot(this.activeHits[0], this.curDir);
             return this.configureAI(newShot);
         }
         //Random Shot
