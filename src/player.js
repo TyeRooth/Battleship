@@ -1,7 +1,7 @@
 import { GameBoard } from "./gameBoard";
 import { addHitButtons, chooseShipPosition} from "./helpers";
-import {computerAI} from "./computerAI";
 import { addAxisButton, clearBoardSection, showAvailablePositions, showPossiblePlacement, removeCurrentPlacement } from "./DOM";
+import { compAI } from "./compAI";
 
 const Player = (type) => {
     let attackedPositions = [];
@@ -9,27 +9,11 @@ const Player = (type) => {
     let playerBoard = GameBoard()
     let axis = "x";
 
-    //These variables are all important for computer AI.
-    let hitLastTurn = false;
-    let prevHits = [];
-    let opponentBoard = GameBoard();
-    let startRandom = true;
-    let recentSunkPositions = [];
-
-    function configureMemory (result, position, opponent) {
-        // This configuration leads back to random picks
-        // Computer stops purposeful picking once ship has been sunk
-        opponentBoard = opponent;
-        if (hitsSunkShip()) {
-            prevHits = prevHits.filter(position => !recentSunkPositions.includes(position));
-        }
-        // Add hit to current hit array if successful
-        if (result) {
-            prevHits.push(position);
-        }
-        // Unfortunately, I need to check for sunk to add it to AI cond.
-        startRandom = !hitsSunkShip() && prevHits.length !== 0 ? false : true;
-        hitLastTurn = result;
+    //Different Approach to AI, trying more OOP way
+    let ai = compAI;
+    function generateCompHit () {
+        console.log(ai.possibleHits);
+        return ai.testAI();
     }
 
     // Check whether a ship has been sunk in the recent aimed shots
@@ -50,21 +34,12 @@ const Player = (type) => {
         return false;
     }
 
-    function computerChooses () {
-        const possibleOptions = computerAI(prevHits, opponentBoard, attackedPositions, startRandom, hitLastTurn);
-        console.log(possibleOptions);
-        let index = Math.floor(Math.random() * possibleOptions.length);
-        const shot = possibleOptions[index];
-        return shot;
-    };
-
     async function attackEnemy () {
         if (type === "computer") {
-            const chosenPosition = computerChooses();
-            const positionIndex = openPositions.findIndex(index => index === chosenPosition);
-            openPositions.splice(positionIndex, 1);
-            attackedPositions.push(chosenPosition);
-            return chosenPosition;
+            const position = generateCompHit();
+            attackedPositions.push(position);
+            openPositions.splice(position - attackedPositions.length, 1);
+            return position;
         }
         else if (type === "player") {
             let position = Number(await addHitButtons(attackedPositions));
@@ -184,8 +159,8 @@ const Player = (type) => {
         attackEnemy,
         setupBoard,
         removePlacementBoard,
-        configureMemory,
         playerBoard,
+        ai,
         attackedPositions
     }
 }
