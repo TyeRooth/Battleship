@@ -1,5 +1,7 @@
 import {gameBoard} from "./gameBoard";
 
+// This is the not working old AI, but I am keeping it here as a shout out to my first try.
+
 let nextHits = [];
 let opponentBoard;
 let alreadyAttacked = [];
@@ -11,7 +13,6 @@ function computerAI (prevHits, board, attackedPositions, startRandom, hitLastTur
     alreadyAttacked = attackedPositions;
 
     //Making it so that the computer is random for now
-    if(true) {return randomShot()};
 
     //Once AI has found multiple ship direction
     console.log(checkForMultipleAxis(prevHits))

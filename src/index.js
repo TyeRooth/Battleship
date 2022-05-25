@@ -21,6 +21,7 @@ async function gameFlow () {
     await player.setupBoard();
     await waitTest(10);
     player.removePlacementBoard()
+    computer.ai.addOpponentShips(pBoard);
     let turn = 0;
     pBoard.updateBoardDOM("player");
     cBoard.updateBoardDOM("enemy");
@@ -29,9 +30,7 @@ async function gameFlow () {
             cBoard.receiveAttack(await player.attackEnemy());
         }
         else {
-            const position = await computer.attackEnemy()
-            const result = pBoard.receiveAttack(position);
-            computer.configureMemory(result, position, pBoard);
+            pBoard.receiveAttack(await computer.attackEnemy());
         }
         pBoard.updateBoardDOM("player");
         cBoard.updateBoardDOM("enemy");
@@ -43,7 +42,7 @@ async function gameFlow () {
         message.textContent = "Computer has won the game";
     }
     else if (cBoard.checkLoseCondition()) {
-        message.textContent = "Player has won the game";
+        message.textContent = "Player has won the game"
     }
     pBoard.updateBoardDOM("player");
     cBoard.updateBoardDOM("enemy");
