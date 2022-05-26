@@ -9,6 +9,7 @@ let compAI = {
     activeHits : [],
     curDir : null,
     changedDir : false,
+    //For multiple ship instances
     storedHits : [],
 
     // Required for AI to recognize whether a hit has been made
@@ -38,7 +39,6 @@ let compAI = {
         this.possibleHits = [];
         this.activeHits = [];
         this.curDir = null;
-        //For multiple ship instances
         this.storedHits = [];
     },
 

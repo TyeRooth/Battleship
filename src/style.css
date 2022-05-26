@@ -31,8 +31,19 @@ body {
     align-items: center;
     background-color: midnightblue;
     height: 10vh;
+}
+
+#message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+    background-color: grey;
+    border-radius: 8px;
+    width: 50%;
+    height: 2rem;
+    font-size: 1rem;
     color: white;
-    font-size: 2rem;
 }
 
 #boards-section {

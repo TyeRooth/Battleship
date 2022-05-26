@@ -1,6 +1,3 @@
-import { GameBoard } from "./gameBoard";
-import { Ship } from "./ship";
-
 function renderBoard (type, missedShots, hitShots, shipSpots) {
 
     const boardSection = document.getElementById('boards-section');
@@ -146,4 +143,14 @@ function clearBoardSection () {
     boardSection.textContent = "";
 }
 
-export { renderBoard, addAxisButton, clearBoardSection, showAvailablePositions, showPossiblePlacement, removeCurrentPlacement };
+function postMessage (message) {
+    const messageBox = document.getElementById('message');
+    messageBox.textContent = message;
+} 
+
+function addToMessage (addedText) {
+    const messageBox = document.getElementById('message');
+    messageBox.textContent = messageBox.textContent + addedText;
+}
+
+export { renderBoard, addAxisButton, clearBoardSection, showAvailablePositions, showPossiblePlacement, removeCurrentPlacement, postMessage, addToMessage };

@@ -1,5 +1,6 @@
 import './style.css';
 import { Player } from "./player";
+import { postMessage } from './DOM';
 
 const player = Player("player");
 const computer = Player("computer");
@@ -11,15 +12,15 @@ computer.setupBoard();
 async function gameFlow () {
     pBoard.updateBoardDOM("placement");
     //waitTest is temporary while I understand asynchronous functions
-    function waitTest(x) {
+    function waitTest(x, time) {
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve(x);
-            }, 1000);
+            }, time);
         });
     }
     await player.setupBoard();
-    await waitTest(10);
+    await waitTest(10, 1000);
     player.removePlacementBoard()
     computer.ai.addOpponentShips(pBoard);
     let turn = 0;
@@ -27,6 +28,7 @@ async function gameFlow () {
     cBoard.updateBoardDOM("enemy");
     do {
         if (turn % 2 === 0) {
+            postMessage("Shoot your shot");
             cBoard.receiveAttack(await player.attackEnemy());
         }
         else {
@@ -34,15 +36,19 @@ async function gameFlow () {
         }
         pBoard.updateBoardDOM("player");
         cBoard.updateBoardDOM("enemy");
-        turn++
+        await waitTest(10, 2000);
+        // This is for posting a message if a ship has been sunk
+        if (pBoard.checkFirstTimeSunk("Computer") || cBoard.checkFirstTimeSunk("Player")) {
+            await waitTest(10, 3000);
+        }
+        turn++;
     }
     while (!pBoard.checkLoseCondition() && !cBoard.checkLoseCondition());
-    const message = document.getElementById('message-section');
     if (pBoard.checkLoseCondition()) {
-        message.textContent = "Computer has won the game";
+        postMessage("Computer has won the battle");
     }
     else if (cBoard.checkLoseCondition()) {
-        message.textContent = "Player has won the game"
+        postMessage("Player has won the battle");
     }
     pBoard.updateBoardDOM("player");
     cBoard.updateBoardDOM("enemy");

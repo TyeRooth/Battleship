@@ -1,5 +1,5 @@
 import { Ship } from "./ship";
-import { renderBoard } from "./DOM";
+import { renderBoard, addToMessage } from "./DOM";
 
 const GameBoard = () => {
 
@@ -31,10 +31,12 @@ const GameBoard = () => {
                 if (ships[i].positions[j] === position) {
                     ships[i].hit(position);
                     hitShots.push(position);
+                    addToMessage(" ... It was a hit");
                     return true;
                 }
             }
         }
+        addToMessage(" ... It was a miss");
         missedShots.push(position);
         return false;
     }
@@ -85,6 +87,16 @@ const GameBoard = () => {
         renderBoard(type, missedShots, hitShots, ships);
     }
 
+    function checkFirstTimeSunk (player) {
+        for (let i = 0; i < ships.length; i++) {
+            const firstSink = ships[i].firstTimeSunk(player);
+            if (firstSink) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     return {
         placeShip,
         receiveAttack,
@@ -93,7 +105,8 @@ const GameBoard = () => {
         missedShots,
         checkLoseCondition,
         updateBoardDOM,
-        shipCanBePlaced
+        shipCanBePlaced,
+        checkFirstTimeSunk
     }
 }
 

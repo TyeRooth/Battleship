@@ -1,6 +1,6 @@
 import { GameBoard } from "./gameBoard";
 import { addHitButtons, chooseShipPosition} from "./helpers";
-import { addAxisButton, clearBoardSection, showAvailablePositions, showPossiblePlacement, removeCurrentPlacement } from "./DOM";
+import { addAxisButton, clearBoardSection, showAvailablePositions, showPossiblePlacement, removeCurrentPlacement, postMessage } from "./DOM";
 import { compAI } from "./compAI";
 
 const Player = (type) => {
@@ -12,7 +12,6 @@ const Player = (type) => {
     //Different Approach to AI, trying more OOP way
     let ai = compAI;
     function generateCompHit () {
-        console.log(ai.possibleHits);
         return ai.testAI();
     }
 
@@ -39,15 +38,19 @@ const Player = (type) => {
             const position = generateCompHit();
             attackedPositions.push(position);
             openPositions.splice(position - attackedPositions.length, 1);
+            postMessage(`Computer has shot coordinate ${ position }`);
             return position;
         }
         else if (type === "player") {
             let position = Number(await addHitButtons(attackedPositions));
             attackedPositions.push(position);
             openPositions.splice(position - attackedPositions.length, 1);
+            postMessage(`Player has shot coordinate ${ position }`);
             return position;    
         }
     }
+
+    // Below functions are related to setting up the board
 
     function axisToggle () {
         const axisButton = document.getElementById('axis-toggle');
@@ -83,6 +86,7 @@ const Player = (type) => {
             playerBoard.placeShip(randomPosition, axis, length, name);
         }
         else if (type === "player") {
+            postMessage(`Place your ${name}`);
             let openPositionsX = playerBoard.shipCanBePlaced("x", length);
             let openPositionsY = playerBoard.shipCanBePlaced("y", length);
             switchOpens(openPositionsX, openPositionsY, length);
