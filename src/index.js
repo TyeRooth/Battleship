@@ -34,9 +34,9 @@ async function gameFlow () {
         else {
             pBoard.receiveAttack(await computer.attackEnemy());
         }
+        await waitTest(10, 10);
         pBoard.updateBoardDOM("player");
         cBoard.updateBoardDOM("enemy");
-        await waitTest(10, 2000);
         // This is for posting a message if a ship has been sunk
         if (pBoard.checkFirstTimeSunk("Computer") || cBoard.checkFirstTimeSunk("Player")) {
             await waitTest(10, 3000);

@@ -15,24 +15,6 @@ const Player = (type) => {
         return ai.testAI();
     }
 
-    // Check whether a ship has been sunk in the recent aimed shots
-    function hitsSunkShip () {
-        const enemyShips = opponentBoard.ships;
-        for (let i = 0; i < enemyShips.length; i++) {
-            let hitCount = 0;
-            for (let j = 0; j < enemyShips[i].positions.length; j++) {
-                if (prevHits.includes(enemyShips[i].positions[j])) {
-                    hitCount++;
-                }
-            }
-            if (hitCount === enemyShips[i].positions.length) {
-                recentSunkPositions = enemyShips[i].positions;
-                return true;
-            }
-        }
-        return false;
-    }
-
     async function attackEnemy () {
         if (type === "computer") {
             const position = generateCompHit();

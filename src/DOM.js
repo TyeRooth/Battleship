@@ -30,6 +30,10 @@ function renderBoard (type, missedShots, hitShots, shipSpots) {
         else if (type === "placement" && showShips(shipSpots, i)) {
             position.classList.add("ship");
         }
+        //Computer ships appear once sunk
+        else if (type === "enemy" && showSunkShips(shipSpots, i)) {
+            position.classList.add("ship");
+        }
         board.appendChild(position);
     };
     if (!document.querySelector(`.${ type }`)) {
@@ -46,6 +50,16 @@ function renderBoard (type, missedShots, hitShots, shipSpots) {
 function showShips(shipSpots, position) {
     for(let i = 0; i < shipSpots.length; i++) {
         if (shipSpots[i].positions.includes(position)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+//Shows computer ships once they are sunk
+function showSunkShips (ships, position) {
+    for (let i = 0; i < ships.length; i++) {
+        if (ships[i].isSunk("arg to prevent sink state") && ships[i].positions.includes(position)) {
             return true;
         }
     }
