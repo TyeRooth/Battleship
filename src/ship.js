@@ -11,9 +11,7 @@ const Ship = (name, positions) => {
 
     //This is for posting the message when a ship first sinks
     function firstTimeSunk (player) {
-        console.log(alreadySunk);
         if (alreadySunk === false && hits.length === positions.length) {
-            console.log("test");
             alreadySunk = true;
             postMessage(`${ player } has sunk the opponent's ${ name }`);
             return true;

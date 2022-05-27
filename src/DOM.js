@@ -21,9 +21,6 @@ function renderBoard (type, missedShots, hitShots, shipSpots) {
             position.classList.add('shot');
             position.appendChild(hitShotDOM());
         }
-        else {
-            position.textContent = i;
-        }
         if (type === "player" && showShips(shipSpots, i)) {
            position.classList.add('ship');
         }
@@ -88,7 +85,7 @@ function missedShotDOM () {
     return missCircle;
 }
 
-function hitShotDOM (position) {
+function hitShotDOM () {
     const hitCircle = document.createElement('div');
     hitCircle.classList.add('circle');
     hitCircle.style.backgroundColor = "red";
@@ -123,33 +120,39 @@ function showAvailablePositions(openPositions) {
 }
 
 function showPossiblePlacement (axis, length, coordinate) {
-    if (axis === "x") {
-        for (let i = 0; i < length; i++) {
-            const placement = document.querySelector(`[data-position="${coordinate + i}"]`);
-            placement.classList.add("possible-placement");
+    const coordinateNode = document.querySelector(`[data-position="${coordinate}"]`);
+    if (coordinateNode.classList.contains('available')) {
+        if (axis === "x") {
+            for (let i = 0; i < length; i++) {
+                const placement = document.querySelector(`[data-position="${coordinate + i}"]`);
+                placement.classList.add("possible-placement");
+            }
         }
-    }
-    else if (axis === "y") {
-        for (let i = 0; i < length; i++) {
-            const placement = document.querySelector(`[data-position="${coordinate + i * 10}"]`);
-            placement.classList.add("possible-placement");
+        else if (axis === "y") {
+            for (let i = 0; i < length; i++) {
+                const placement = document.querySelector(`[data-position="${coordinate + i * 10}"]`);
+                placement.classList.add("possible-placement");
+            }
         }
     }
 }
 
 function removeCurrentPlacement (axis, length, coordinate) {
-    if (axis === "x") {
-        for (let i = 0; i < length; i++) {
-            const placement = document.querySelector(`[data-position="${coordinate + i}"]`);
-            placement.classList.remove("possible-placement");
+    const coordinateNode = document.querySelector(`[data-position="${coordinate}"]`);
+    if (coordinateNode.classList.contains('available')) {
+        if (axis === "x") {
+            for (let i = 0; i < length; i++) {
+                const placement = document.querySelector(`[data-position="${coordinate + i}"]`);
+                placement.classList.remove("possible-placement");
+            }
         }
+        else if (axis === "y") {
+            for (let i = 0; i < length; i++) {
+                const placement = document.querySelector(`[data-position="${coordinate + i * 10}"]`);
+                placement.classList.remove("possible-placement");
+            }
+        }  
     }
-    else if (axis === "y") {
-        for (let i = 0; i < length; i++) {
-            const placement = document.querySelector(`[data-position="${coordinate + i * 10}"]`);
-            placement.classList.remove("possible-placement");
-        }
-    }  
 }
 
 function clearBoardSection () {

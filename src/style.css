@@ -11,13 +11,14 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    background: rgb(2,23,133);
+    background: radial-gradient(circle, rgba(2,23,133,1) 0%, rgba(8,0,50,1) 100%); 
 }
 
 #heading-section {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: midnightblue;
     height: 10vh;
 }
 
@@ -29,28 +30,37 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: midnightblue;
     height: 10vh;
+    margin-top: 30px;
+}
+
+@font-face {
+    font-family: 'GameFont';
+    src: url(./PressStart2P-Regular.ttf);
 }
 
 #message {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: 10px;
+    text-align: center;
     background-color: grey;
-    border-radius: 8px;
-    width: 50%;
+    border-radius: 16px;
+    width: 55%;
     height: 2rem;
-    font-size: 1rem;
-    color: white;
+    font-family: 'GameFont';
+    font-size: 0.7rem;
+    color: lightgray;
+    background: rgb(34,34,34);
+    background: radial-gradient(circle, rgba(34,34,34,1) 0%, rgba(55,55,55,1) 100%);
+    border: solid 1px white;
+    padding: 10px; 
 }
 
 #boards-section {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-color: midnightblue;
     height: 72vh;
     flex-wrap: wrap;
     gap: 40px;
@@ -73,6 +83,7 @@ body {
 
 #axis-toggle {
     width: max-content;
+    padding: 3px;
 }
 
 #credit-section {
@@ -80,7 +91,8 @@ body {
     justify-content: center;
     align-items: center;
     height: 8vh;
-    background-color: lightgray;
+    background: rgb(196,196,196);
+    background: radial-gradient(circle, rgba(196,196,196,1) 0%, rgba(139,139,139,1) 100%);
 }
 
 .board {
@@ -88,29 +100,22 @@ body {
     height: 400px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     gap: 2px;
 }
 
 .position {
     color: white;
-    background-color: midnightblue;
+    background: transparent;
     border: 1px solid white;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.available {
-    background-color: blue;
-}
-
 .available:hover,
 button.possible-placement {
     background-color: lightgray;
-}
-
-.unavailable {
-    background-color: midnightblue;
 }
 
 .unavailable:hover {

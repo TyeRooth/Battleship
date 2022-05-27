@@ -2,14 +2,12 @@ import './style.css';
 import { Player } from "./player";
 import { postMessage } from './DOM';
 
-const player = Player("player");
-const computer = Player("computer");
-const pBoard = player.playerBoard;
-const cBoard = computer.playerBoard;
-
-computer.setupBoard();
-
 async function gameFlow () {
+    const player = Player("player");
+    const computer = Player("computer");
+    const pBoard = player.playerBoard;
+    const cBoard = computer.playerBoard;
+    computer.setupBoard();
     pBoard.updateBoardDOM("placement");
     //waitTest is temporary while I understand asynchronous functions
     function waitTest(x, time) {
@@ -34,9 +32,9 @@ async function gameFlow () {
         else {
             pBoard.receiveAttack(await computer.attackEnemy());
         }
-        await waitTest(10, 10);
         pBoard.updateBoardDOM("player");
         cBoard.updateBoardDOM("enemy");
+        await waitTest(10, 3000);
         // This is for posting a message if a ship has been sunk
         if (pBoard.checkFirstTimeSunk("Computer") || cBoard.checkFirstTimeSunk("Player")) {
             await waitTest(10, 3000);
